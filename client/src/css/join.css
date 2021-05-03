@@ -15,10 +15,6 @@
     flex-direction: column;
 }
 
-.form > .btn-link {
- 
-
-}
 
 label, h2 {
     color: #927BCA;
@@ -31,15 +27,22 @@ label, h2 {
     text-decoration: none;
     padding: .5rem;
     outline: none;
-    border: none;
+    border: 3px solid #4d3f6f;
     color: white;
     text-align: center;
     cursor: pointer;
+    -webkit-box-shadow: 0px 11px 35px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 11px 35px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 11px 35px 0px rgba(0,0,0,0.75);
 }
 
 .name-input {
     margin: 2rem 0 2rem 0.5rem;
-    width: 72%;
+    width: 70%;
+    border: 3px solid #4d3f6f;
+    -webkit-box-shadow: 0px 11px 35px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 11px 35px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 11px 35px 0px rgba(0,0,0,0.75);
    
 }
 
