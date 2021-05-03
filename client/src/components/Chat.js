@@ -17,7 +17,7 @@ class Chat extends Component {
                     <PlusOutlined style={{ color: "#927BCA", fontSize: "1.5rem", }} />
                 </div>
                 <div className="header-right">
-                    <span>Group room 1</span>
+                    <span style={{ fontSize: "1.5rem" }}>Group room 1</span>
                 </div>
             </div>
             <div className="flex-div">

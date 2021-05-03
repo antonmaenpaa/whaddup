@@ -10,6 +10,25 @@
     border-radius: 2rem;
     overflow: hidden;
 }
+    /* width */
+    ::-webkit-scrollbar {
+    width: 7px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #927BCA;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #4d3f6f;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #363636; 
+  }
 
 .header {
     display: flex;
@@ -30,7 +49,8 @@
 
 
 h2 {
-    font-weight: lighter;
+    font-size: 1.5rem;
+    font-weight: 500;
 }
 
 span {
@@ -106,6 +126,7 @@ input {
     height: 30rem;
     overflow-y: scroll;
     overflow-x: hidden;
+    scrollbar-width: thin;
 }
 
 .message-left {
