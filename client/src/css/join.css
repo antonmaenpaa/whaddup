@@ -1,0 +1,68 @@
+.join-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 38.7rem;
+    width: 60rem;
+    background: #363636;
+    border: 2px solid #927BCA;
+    border-radius: 2rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form > .btn-link {
+ 
+
+}
+
+label, h2 {
+    color: #927BCA;
+}
+
+.btn-link {
+    background: #927BCA;
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    text-decoration: none;
+    padding: .5rem;
+    outline: none;
+    border: none;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+
+.name-input {
+    margin: 2rem 0 2rem 0.5rem;
+    width: 72%;
+   
+}
+
+.input-div {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+}
+
+.input-div > input {
+    background: #927BCA;
+    border-radius: 1rem;
+    outline: none;
+    border: none;
+    padding: .5rem;
+    margin-left: .5rem;
+}
+
+@media (max-width: 40em) {
+
+    .join-div {
+        width: 19rem;
+        
+    }
+}
+

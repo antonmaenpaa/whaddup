@@ -1,0 +1,141 @@
+.chat-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* height: 40rem; */
+    width: 60rem;
+    background: #363636;
+    border: 2px solid #927BCA;
+    border-radius: 2rem;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border-bottom: 1px solid  #927BCA;
+}
+
+.header-left {
+    margin: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 40%;
+
+}
+
+
+h2 {
+    font-weight: lighter;
+}
+
+span {
+    color: #927BCA;
+}
+
+.header-right {
+    margin: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+}
+
+.flex-div {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+.rooms {
+    width: 40%;
+    border-right: 2px solid  #927BCA;;
+    border-top: 1px solid  #927BCA;;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.rooms-item {
+    display: flex;
+    width: 100%;
+    height: 3rem;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5rem;
+}
+
+.rooms-div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: center;
+    font-size: .8rem;
+}
+.chat {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    border-top: 1px solid  #927BCA;
+}
+
+input {
+    flex-grow: 1;
+    padding: .5rem;
+    margin: .5rem;
+    background: #DED7FF;
+    border-radius: 1rem;
+    outline: none;
+    border: none;
+
+}
+
+.li {
+    text-decoration: none;
+}
+
+.message-container {
+    margin: 0;
+    padding: .5rem .5rem;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    background-color: #927BCA;
+    height: 30rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.message-left {
+    border-radius: 20px 20px 20px 0px;
+    padding: 0 .5rem;
+    align-self: flex-start;
+    background-color: #363636;
+    color: #f6f6f6;
+    margin-bottom: 1rem;
+}
+
+.message-right {
+    margin: 0;
+    padding: 0 .5rem;
+    border-radius: 20px 20px 0px 20px;
+    align-self: flex-end;
+    background-color: #363636;
+    color: #f6f6f6;
+    margin-bottom: 1rem;
+}
+
+form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.name {
+    display: block;
+    font-style: italic;
+    font-size: 12px;
+    margin-top: 4px;
+}
