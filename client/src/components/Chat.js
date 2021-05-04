@@ -6,14 +6,14 @@ import { SendOutlined, WechatOutlined, LockOutlined, PlusOutlined } from '@ant-d
 
 
 
-class Chat extends Component {
+function Chat(props) {
   
-  render() {
+  
     return(
         <div className="chat-div">
             <div className="header">
                 <div className="header-left">
-                    <h2>Anton</h2>
+                    <h2>{props.userName}</h2>
                     <PlusOutlined style={{ color: "#927BCA", fontSize: "1.5rem", }} />
                 </div>
                 <div className="header-right">
@@ -90,6 +90,6 @@ class Chat extends Component {
         </div>
     )
   }
-}
+
 
 export default Chat;
