@@ -14,7 +14,7 @@ function Join() {
                     <div>
         
                         <label style={{ fontSize: "1.5rem", fontWeight: 500, }}>Name</label>
-                        <input type="text" class="name-input"></input>
+                        <input type="text" className="name-input"></input>
 
                     </div>
                     <Link className="btn-link" to="/chat">

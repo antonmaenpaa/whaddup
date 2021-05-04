@@ -33,50 +33,50 @@ class Chat extends Component {
                 </div>
                 <div className="chat">
                     <ul className="message-container">
-                        <li class="message-left"  id="margin-left">
-                        <p class="message">
+                        <li className="message-left"  id="margin-left">
+                        <p className="message">
                             lorem ipsum
                             <span className="name">Anton - few seconds ago</span>
                         </p>
                          </li>
-                        <li class="message-right">
-                            <p class="message">
+                        <li className="message-right">
+                            <p className="message">
                                 lorem ipsum lorem ipsum lorem ipsum lorem ipsum
                                 <span className="name">Anton - few seconds ago</span>
                             </p>
                         </li>
-                        <li class="message-left"  id="margin-left">
-                        <p class="message">
+                        <li className="message-left"  id="margin-left">
+                        <p className="message">
                             lorem ipsum
                             <span className="name">Anton - few seconds ago</span>
                         </p>
                          </li>
-                         <li class="message-left"  id="margin-left">
-                        <p class="message">
+                         <li className="message-left"  id="margin-left">
+                        <p className="message">
                             lorem ipsum
                             <span className="name">Anton - few seconds ago</span>
                         </p>
                          </li>
-                         <li class="message-left"  id="margin-left">
-                        <p class="message">
+                         <li className="message-left"  id="margin-left">
+                        <p className="message">
                             lorem ipsum
                             <span className="name">Anton - few seconds ago</span>
                         </p>
                          </li>
-                         <li class="message-left"  id="margin-left">
-                        <p class="message">
+                         <li className="message-left"  id="margin-left">
+                        <p className="message">
                             lorem ipsum
                             <span className="name">Anton - few seconds ago</span>
                         </p>
                          </li>
-                         <li class="message-left"  id="margin-left">
-                        <p class="message">
+                         <li className="message-left"  id="margin-left">
+                        <p className="message">
                             lorem ipsum
                             <span className="name">Anton - few seconds ago</span>
                         </p>
                          </li>
-                         <li class="message-left"  id="margin-left">
-                        <p class="message">
+                         <li className="message-left"  id="margin-left">
+                        <p className="message">
                             lorem ipsum
                             <span className="name">Anton - few seconds ago</span>
                         </p>
