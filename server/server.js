@@ -5,11 +5,6 @@ const server = http.createServer(app);
 const socket = require('socket.io');
 const io = socket(server)
 
-let users = [];
-
-const rooms = {
-    general: [],
-}
 
 io.on("connection", (socket) => {
     socket.on("join server", (username) => {
