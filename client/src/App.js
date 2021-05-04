@@ -1,6 +1,6 @@
 // import io from 'socket.io-client';
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Redirect, } from 'react-router-dom'
+import React, { useState } from 'react';
+import { BrowserRouter as Router,  } from 'react-router-dom'
 import {  Route, Switch } from "react-router";
 import Join from './components/Join'
 import Chat from './components/Chat'

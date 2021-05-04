@@ -1,69 +1,53 @@
 import '../css/chat.css'
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { SendOutlined, WechatOutlined, LockOutlined, PlusOutlined } from '@ant-design/icons';
 import io from "socket.io-client";
 
 
-const PORT = 'localhost:5000'
-let socket = io()
-
 function Chat(props) {
- const [message, setMessage] = useState("");
 
-
+    const [yourID, setYourID] = useState();
+    const [messages, setMessages] = useState([]);
+    const [message, setMessage] = useState("");
+  
+    const socketRef = useRef();
+  
     useEffect(() => {
-        let socket = io(PORT, {
-          transports: ["websocket"],
-        });
-        socket.on('connect', () => {
-          console.log('connected')
-        })
+      socketRef.current = io.connect('/');
+  
+      socketRef.current.on("your id", id => {
+        setYourID(id);
+      })
+  
+      socketRef.current.on("message", (message) => {
+        console.log("here");
+        receivedMessage(message);
+      })
     }, []);
-    
-    function inputMessage(e) {
-        setMessage(e.target.value)
-    }
 
+    function receivedMessage(message) {
+        setMessages(oldMsgs => [...oldMsgs, message]);
+      }
+
+    
     // Takes value from input and sends data to socket
-    function sendMessage() {
-        if(message === '') return
-        const data = {
-            name: props.userName,
-            message: message,
+    function sendMessage(e) {
+        e.preventDefault();
+        const messageObject = {
+            body: message,
+            id: yourID,
+            sender: props.userName
+        };
+        setMessage("");
+        socketRef.current.emit("send message", messageObject);
+        
         }
         
-        socket.emit('message', data)
-        addMessageToUI(data); // när man sänder ett meddelande
-        setMessage("")
-    }
-    
-
-    let element;
-    function addMessageToUI(data) { // lägger till li dokument när man sänder ett meddelande, som anropas i sendMessag funktionen
-        // clearFeedback();
-        element = (
-            
-          ` <li className="message-right">
-                <p className="message">
-                    ${data.message}
-                </p>
-                <span>${data.name}</span> 
-            </li>`
-            
-        )
+        function inputMessage(e) {
+            setMessage(e.target.value)
+        }
 
 
-    const ul = document.getElementById("ul");
-
-    ul.innerHTML += element
-
-    
-
-    // ${moment(data.dateTime).fromNow()}</span> <-- från moment library
-
-    // scrollToBottom();
-}
-  
     return(
         <div className="chat-div">
             <div className="header">
@@ -88,10 +72,35 @@ function Chat(props) {
                 </div>
                 <div className="chat">
                     <ul id="ul" className="message-container">
-                        {element}
+                     
+                       {messages.map((message, index) => {
+                           if (message.id === yourID) {
+                                return (
+                                    <>
+                                    <li className="message-right" key={index}>
+                                        <p className="message">
+                                            {message.body}
+                                        </p>
+                                     </li>
+                                    <span className="sender-right">{message.sender}</span> 
+                                     </>
+                               )
+                           }
+                                return (
+                                    <>
+                                    <li className="message-left" key={index}>
+                                        <p className="message">
+                                            {message.body}
+                                        </p>
+                                    </li>
+                                    <span className="sender-left">{message.sender}</span> 
+                                    </>
+                           )
+                       })}
                     </ul>
                     <form>
-                        <input type="text" onChange={(e) => inputMessage(e)}></input><SendOutlined onClick={(e) => sendMessage(e)} style={{ fontSize: "1.5rem", margin: 0, padding: 0, color: " #927BCA", marginRight: ".5rem"}}/>
+                        <input type="text" value={message} onChange={inputMessage} />
+                        <SendOutlined onClick={sendMessage} style={{ fontSize: "1.5rem", margin: 0, padding: 0, color: " #927BCA", marginRight: ".5rem"}}/>
                     </form>
                 </div>
             </div>
