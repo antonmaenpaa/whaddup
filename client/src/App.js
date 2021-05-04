@@ -5,10 +5,9 @@ import {  Route, Switch } from "react-router";
 import Join from './components/Join'
 import Chat from './components/Chat'
 import './App.css';
-import io from "socket.io-client";
 
 
-const ENDPOINT = 'localhost:5000'
+
 
 function App() {
 
@@ -16,20 +15,11 @@ function App() {
 
   const [isLoggedin, setIsLoggedin] = useState(false)
 
-    useEffect(() => {
-    let socket = io(ENDPOINT, {
-      transports: ["websocket"],
-    });
-    socket.on('connect', () => {
-      console.log('connected')
-    })
-  
-  }, []);
+
 
 function saveUserName(e){
   setUserName(e.target.value)
 }
-
 
 function enterChatRoom(e) {
   e.preventDefault()
@@ -41,15 +31,21 @@ function enterChatRoom(e) {
 }
 
 
+
   return (
 
     <Router>
       <Switch>
         <Route exact path="/">
-          <Join enterChatRoom={enterChatRoom} userName={saveUserName} loggedIn={isLoggedin}/>
+          <Join 
+            enterChatRoom={enterChatRoom} 
+            userName={saveUserName} 
+            loggedIn={isLoggedin}/>
         </Route>
         <Route path="/chat">
-          <Chat userName={userName}/>      
+          <Chat 
+            userName={userName} 
+            />      
         </Route>
       </Switch>
     </Router>

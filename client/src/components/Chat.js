@@ -1,13 +1,68 @@
 import '../css/chat.css'
-import React, { Component } from "react"
+import React, { useEffect, useState } from "react"
 import { SendOutlined, WechatOutlined, LockOutlined, PlusOutlined } from '@ant-design/icons';
+import io from "socket.io-client";
 
 
-
-
+const PORT = 'localhost:5000'
+let socket = io()
 
 function Chat(props) {
-  
+ const [message, setMessage] = useState("");
+
+
+    useEffect(() => {
+        let socket = io(PORT, {
+          transports: ["websocket"],
+        });
+        socket.on('connect', () => {
+          console.log('connected')
+        })
+    }, []);
+    
+    function inputMessage(e) {
+        setMessage(e.target.value)
+    }
+
+    // Takes value from input and sends data to socket
+    function sendMessage() {
+        if(message === '') return
+        const data = {
+            name: props.userName,
+            message: message,
+        }
+        
+        socket.emit('message', data)
+        addMessageToUI(data); // när man sänder ett meddelande
+        setMessage("")
+    }
+    
+
+    let element;
+    function addMessageToUI(data) { // lägger till li dokument när man sänder ett meddelande, som anropas i sendMessag funktionen
+        // clearFeedback();
+        element = (
+            
+          ` <li className="message-right">
+                <p className="message">
+                    ${data.message}
+                </p>
+                <span>${data.name}</span> 
+            </li>`
+            
+        )
+
+
+    const ul = document.getElementById("ul");
+
+    ul.innerHTML += element
+
+    
+
+    // ${moment(data.dateTime).fromNow()}</span> <-- från moment library
+
+    // scrollToBottom();
+}
   
     return(
         <div className="chat-div">
@@ -32,58 +87,11 @@ function Chat(props) {
                     </div>
                 </div>
                 <div className="chat">
-                    <ul className="message-container">
-                        <li className="message-left"  id="margin-left">
-                        <p className="message">
-                            lorem ipsum
-                            <span className="name">Anton - few seconds ago</span>
-                        </p>
-                         </li>
-                        <li className="message-right">
-                            <p className="message">
-                                lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                                <span className="name">Anton - few seconds ago</span>
-                            </p>
-                        </li>
-                        <li className="message-left"  id="margin-left">
-                        <p className="message">
-                            lorem ipsum
-                            <span className="name">Anton - few seconds ago</span>
-                        </p>
-                         </li>
-                         <li className="message-left"  id="margin-left">
-                        <p className="message">
-                            lorem ipsum
-                            <span className="name">Anton - few seconds ago</span>
-                        </p>
-                         </li>
-                         <li className="message-left"  id="margin-left">
-                        <p className="message">
-                            lorem ipsum
-                            <span className="name">Anton - few seconds ago</span>
-                        </p>
-                         </li>
-                         <li className="message-left"  id="margin-left">
-                        <p className="message">
-                            lorem ipsum
-                            <span className="name">Anton - few seconds ago</span>
-                        </p>
-                         </li>
-                         <li className="message-left"  id="margin-left">
-                        <p className="message">
-                            lorem ipsum
-                            <span className="name">Anton - few seconds ago</span>
-                        </p>
-                         </li>
-                         <li className="message-left"  id="margin-left">
-                        <p className="message">
-                            lorem ipsum
-                            <span className="name">Anton - few seconds ago</span>
-                        </p>
-                         </li>
+                    <ul id="ul" className="message-container">
+                        {element}
                     </ul>
                     <form>
-                        <input type="text"></input><SendOutlined style={{ fontSize: "1.5rem", margin: 0, padding: 0, color: " #927BCA", marginRight: ".5rem"}}/>
+                        <input type="text" onChange={(e) => inputMessage(e)}></input><SendOutlined onClick={(e) => sendMessage(e)} style={{ fontSize: "1.5rem", margin: 0, padding: 0, color: " #927BCA", marginRight: ".5rem"}}/>
                     </form>
                 </div>
             </div>
