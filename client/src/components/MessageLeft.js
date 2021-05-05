@@ -6,7 +6,7 @@ function MessageLeft(props) {
     return (
         <>
         <li className="message-left" >
-            <p className="message">
+            <p className="message" style={{marginTop: "1em"}}>
                 {props.body}
             </p>
         </li>

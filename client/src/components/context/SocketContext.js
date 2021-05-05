@@ -4,14 +4,17 @@ import io from "socket.io-client";
 
 export const socketContext = createContext()
 
+// export let allRooms = ["General"];
 
 function SocketConnection(props) {
-
-    const [yourID, setYourID] = useState();
     const [messages, setMessages] = useState([]);
+    
+    const [yourID, setYourID] = useState("");
     const [message, setMessage] = useState("");
-
     const [userName, setUserName] = useState("");
+    const [room, setRoom] = useState("")
+    const [rooms, setRooms] = useState(["General"])
+
 
     const [isLoggedin, setIsLoggedin] = useState(false)
 
@@ -23,14 +26,18 @@ function SocketConnection(props) {
         setYourID(id);
       })
   
-      socketRef.current.on("message", (message) => {
-        console.log("here");
-        receivedMessage(message);
-      })
+      socketRef.current.on("message", receivedMessage);
+
+      socketRef.current.on("join room", showRoom);
+        
     }, []);
 
     function receivedMessage(message) {
-    setMessages(oldMsgs => [...oldMsgs, message]);
+        setMessages(oldMsgs => [...oldMsgs, message]);
+    }
+
+    function showRoom(roomName) {
+        console.log("LOGLOLGOGLGOLGO")
     }
 
         
@@ -42,19 +49,16 @@ function SocketConnection(props) {
             id: yourID,
             sender: userName
         };
-        setMessage("");
-        socketRef.current.emit("send message", messageObject);
+        setMessage("");;
+        socketRef.current.emit("message", messageObject);
         
-        }
+    }
         
     function inputMessage(e) {
         setMessage(e.target.value)
     }
 
-    
-    
-    
-    function saveUserName(e){
+    function saveUserName(e) {
         setUserName(e.target.value)
     }
     
@@ -68,9 +72,18 @@ function SocketConnection(props) {
             setIsLoggedin(true)
             
             console.log(isLoggedin)
-
+            socketRef.current.emit("join room", rooms);
         }
 
+    function handleRoomInput(e) {
+        setRoom(e.target.value)
+    }
+
+
+    function createNewRoom() {
+        // allRooms.push(room)
+        setRooms([...rooms, room])
+    }
 
 
     return (
@@ -85,6 +98,11 @@ function SocketConnection(props) {
             message: message,
             userName: userName,
             isLoggedin: isLoggedin,
+            rooms: rooms,
+            handleRoomInput: handleRoomInput,
+            createNewRoom: createNewRoom,
+            showRoom: showRoom,
+
         }}>
 
 

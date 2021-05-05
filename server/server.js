@@ -8,39 +8,42 @@ const io = socket(server)
 
 io.on('connection', socket => {
     socket.emit('your id', socket.id);
-    socket.on('send message', body => {
-        io.emit('message', body)
+    // socket.emit('updated-rooms-list', getRooms);
+
+    socket.on('disconnect', (reason) => {
+        console.log(`Disconnected: ${socket.id}, ${reason}`)
+        // io.emit('updated-rooms-list', getRooms);
     })
+
+    socket.on('message', body => {
+        socket.emit('message', body)
+    })
+
+    // socket.on('join room', roomName => {
+    //     // socket.removeAllListeners('message')
+        
+    //     socket.join(roomName)
+    //     socket.on('message', body => {
+    //         io.to(roomName).emit('message', body)
+    //     })
+
+    //     //io.emit('updated-rooms-list', getRooms);
+    // })
 })
 
-
-// let socketsConnected = new Set()
-
-
-// io.on('connection', onConnected)
-
-
-// function onConnected(socket) {
-//     socketsConnected.add(socket.id);
-
-//     io.emit('clients-total', socketsConnected.size)
-    
-//     socket.on('message', (data) => {
-//         console.log(data)
-//         socket.broadcast.emit('chat-message', data)
-//     })
-    
-//     socket.on('feedback', (data) => {
-//         socket.broadcast.emit('feedback', data)
-//     })
-    
-//     socket.on('disconnect', () => {
-//         console.log('Socket disconnected');
-//         socketsConnected.delete(socket.id)
-//         io.emit('clients-total', socketsConnected.size)
-
-//     })
+//function getRooms() {
+    // io.sockets.adapter.rooms
+    // {
+    //     'lobby': ['a', 'b', 'c', 'd'],
+    //     'köket': ['d'],
+    //     'a': ['a'],
+    //     'b': ['b'],
+    //     'c': ['c'],
+    //     'd': ['d'],
+    // }
+    //return ['lobby', 'köket']
 // }
+
 
 server.listen(5000, () => {
     console.log(`Server is running on port 5000`)
