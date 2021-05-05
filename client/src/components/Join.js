@@ -1,14 +1,18 @@
 import '../css/join.css';
+import { useContext } from 'react'
 import { Redirect } from "react-router-dom";
+import { socketContext } from "../components/context/SocketContext";
 
 
 function Join(props) {
+    const context = useContext(socketContext)
 
 
-    if(props.loggedIn ){
-           
+    
+    if(context.isLoggedin){
         return <Redirect to="/chat"/>
     }
+
     
     return(
         <div className="join-div">
@@ -19,9 +23,9 @@ function Join(props) {
                 <div className="input-div">
                     <div>
                         <label style={{ fontSize: "1.5rem", fontWeight: 500, }}>Name</label>
-                        <input onChange={(e) => props.userName(e)} type="text" className="name-input" required></input>
+                        <input onChange={(e) => context.saveUserName(e)} type="text" className="name-input" required></input>
                     </div>
-                    <button type="submit" onClick={(e) => props.enterChatRoom(e)} className="btn-link" to="/chat">
+                    <button type="submit" onClick={(e) => context.enterChatRoom(e)} className="btn-link" to="/chat">
                         ENTER CHATROOMS
                     </button>
                 </div>
