@@ -38,7 +38,7 @@ function Chat(props) {
                         </Modal>
                 </div>
                 <div className="header-right">
-                    <span style={{ fontSize: "1.5rem", fontWeight: 500}}>Group room 1</span>
+                    <span style={{ fontSize: "1.5rem", fontWeight: 500}}>{context.currentRoom}</span>
                 </div>
             </div>
             <div className="flex-div">
@@ -46,7 +46,7 @@ function Chat(props) {
 
                         {context.rooms.map((room, index) => (
                     
-                            <Rooms showRoom={context.showRoom} key={index} roomName={room}/>
+                            <Rooms key={index} roomName={room}/>
                    
                         ))}
                         
