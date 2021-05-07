@@ -34,7 +34,7 @@ function Chat(props) {
                     <h2>{context.userName}</h2>
                     <PlusOutlined onClick={showModal} style={{ color: "#927BCA", fontSize: "1.5rem", }} />
                         <Modal id="modal" style={{ backgroundColor: "#363636" }}title="New Room" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                            <input type="text" onChange={(e) => context.handleRoomInput(e)}placeholder="Room Name"></input>
+                            <input type="text" maxLength="18" onChange={(e) => context.handleRoomInput(e)}placeholder="Room Name"></input>
                         </Modal>
                 </div>
                 <div className="header-right">
