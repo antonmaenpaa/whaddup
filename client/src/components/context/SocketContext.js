@@ -36,7 +36,6 @@ function SocketConnection(props) {
       socketRef.current.on("updated-rooms-list", serverRooms => {
         setRooms(serverRooms)
         // setTestRooms([...testRooms, testRooms])
-
         console.log(serverRooms)
       })
 
