@@ -20,6 +20,9 @@ io.on('connection', socket => {
     // })
 
     socket.on("join room", roomName => {
+        // if(!socket.id) {
+        //     io.socketsLeave(roomName)
+        // }
         socket.removeAllListeners('message');
         socket.join(roomName)
         socket.emit('joined room', roomName)
@@ -34,32 +37,36 @@ io.on('connection', socket => {
     })
 })
 
+// socket.on('disconnect', () => {
+//     io.of('/test').emit('message', 'user disconnected '+ socket.id);
+//     if (rooms[rooms[socket.id]] && Object.keys(rooms[rooms[socket.id]]).length == 2) {
+//         delete rooms[rooms[socket.id]];
+//     } else {
+//         if (rooms[rooms[socket.id]] && rooms[rooms[socket.id]][socket.id]) {
+//             delete rooms[rooms[socket.id]][socket.id];
+//         }
+//     }
+//     delete rooms[socket.id];
+//     console.log('Disonnected', socket.id);
+//     console.log(rooms);
+// })
+
 function getRooms() {
 
     const sockets = io.sockets.adapter.rooms
-
+    const socketLength = 19
     let rooms = []
-
+    
 
     for (const socket of sockets) {
-        let actualRooms = socket.filter(room => room !== socket[1])
-
-        rooms.push(...actualRooms)
+        const actualRooms = socket.filter((key) => key === socket[0]);
+        // if roomname is shorter then socket length remove long socket room
+        if (actualRooms[0].length < socketLength) {
+          rooms.push(actualRooms[0]);
+        }
     }
-    //console.log("all rooms", rooms)
-    // console.log(rooms)
 
     return [...new Set(rooms)]
-
-    
-    // {
-    //     name: "General",
-            // password: "1234"
-    //     sockets: [
-    //     "Pelle",
-    //     "Johan
-    //     ]   
-    // }
 
 }
 
@@ -67,13 +74,3 @@ function getRooms() {
 server.listen(5000, () => {
     console.log(`Server is running on port 5000`)
 })
-
-
-// function getRooms() {
-// const sockets = Object.values(io.sockets.sockets)
-// let rooms: string[] = []
-// for (const socket of sockets) {
-// const actualRooms = Object.keys(socket.rooms).filter(room => room !== socket.id)
-// rooms.push(...actualRooms)
-// }
-// return [...new Set(rooms()
