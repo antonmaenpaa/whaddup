@@ -1,35 +1,55 @@
 import '../css/chat.css'
-import React, { useContext } from "react"
-import { SendOutlined, WechatOutlined, LockOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useContext, useState } from "react"
+import { Modal } from 'antd';
+import { SendOutlined, PlusOutlined } from '@ant-design/icons';
 import { socketContext } from "./context/SocketContext"
 import MessageLeft from './MessageLeft'
 import MessageRight from './MessageRight'
+import Rooms from './Rooms'
+
 
 
 function Chat(props) {
     const context = useContext(socketContext)
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    function showModal() {
+      setIsModalVisible(true);
+    };
+  
+    function handleOk() {
+      setIsModalVisible(false);
+      context.createNewRoom()
+    };
+  
+    function handleCancel() {
+      setIsModalVisible(false);
+    };
 
     return(
         <div className="chat-div">
             <div className="header">
                 <div className="header-left">
                     <h2>{context.userName}</h2>
-                    <PlusOutlined style={{ color: "#927BCA", fontSize: "1.5rem", }} />
+                    <PlusOutlined onClick={showModal} style={{ color: "#927BCA", fontSize: "1.5rem", }} />
+                        <Modal id="modal" style={{ backgroundColor: "#363636" }}title="New Room" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                            <input type="text" onChange={(e) => context.handleRoomInput(e)}placeholder="Room Name"></input>
+                        </Modal>
                 </div>
                 <div className="header-right">
-                    <span style={{ fontSize: "1.5rem", fontWeight: 500}}>Group room 1</span>
+                    <span style={{ fontSize: "1.5rem", fontWeight: 500}}>{context.currentRoom}</span>
                 </div>
             </div>
             <div className="flex-div">
                 <div className="rooms">
-                    <div className="rooms-item">
-                        <WechatOutlined style={{fontSize: "1.5rem", color: "#927BCA",  margin: ".2rem"}}/>
-                        <div className="rooms-div">
-                            <span style={{color: "#927BCA", marginBottom: ".3rem"}}>Group room 1</span>
-                            <span style={{color: "white"}}>Name: Lorem ipsum</span>
-                        </div>
-                        <LockOutlined style={{fontSize: "1.5rem", color: " #927BCA", margin: ".2rem"}}/>
-                    </div>
+
+                        {context.rooms.map((room, index) => (
+                    
+                            <Rooms key={index} roomName={room}/>
+                   
+                        ))}
+                        
                 </div>
                 <div className="chat">
                     <ul id="ul" className="message-container">
