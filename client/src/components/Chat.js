@@ -14,27 +14,41 @@ function Chat(props) {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
 
-    function showModal() {
-      setIsModalVisible(true);
-    };
-  
     function handleOk() {
       setIsModalVisible(false);
       context.createNewRoom()
     };
-  
-    function handleCancel() {
-      setIsModalVisible(false);
-    };
+
+    // function handleJoinRoomOk() {
+    //     setJoinRoom(false)
+    // }
+    // function handleLeaveRoom() {
+    //     setJoinRoom(false)
+    // }
 
     return(
         <div className="chat-div">
             <div className="header">
                 <div className="header-left">
                     <h2>{context.userName}</h2>
-                    <PlusOutlined onClick={showModal} style={{ color: "#927BCA", fontSize: "1.5rem", }} />
-                        <Modal id="modal" style={{ backgroundColor: "#363636" }}title="New Room" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                            <input type="text" maxLength="18" onChange={(e) => context.handleRoomInput(e)}placeholder="Room Name"></input>
+                    <PlusOutlined onClick={() => setIsModalVisible(true)} style={{ color: "#927BCA", fontSize: "1.5rem", }} />
+                        <Modal id="modal" style={{ backgroundColor: "#363636" }} title="New Room" visible={isModalVisible} onOk={handleOk} onCancel={() => setIsModalVisible(false)}>
+                            <input type="text" maxLength="18" onChange={(e) => context.handleRoomInput(e)} placeholder="Room Name"></input>
+                            <input type="password" onChange={(e) => context.handlePasswordInput(e)} placeholder="Password"></input>
+                        </Modal>
+                        
+                        <Modal 
+                            id="modal" 
+                            title="Enter Room Password" 
+                            visible={context.isJoinRoomModalVisible} 
+                            onOk={context.handleJoinRoomOk}
+                            onCancel={context.handleJoinRoomCancel}
+                            >
+                            <input 
+                                type="password" 
+                                onChange={(e) => context.handleJoinPasswordInput(e)} 
+                                placeholder="Password" 
+                            />
                         </Modal>
                 </div>
                 <div className="header-right">
