@@ -13,6 +13,7 @@ function Chat(props) {
     const context = useContext(socketContext)
 
     const [isModalVisible, setIsModalVisible] = useState(false);
+  
 
     function showModal() {
       setIsModalVisible(true);
@@ -34,8 +35,25 @@ function Chat(props) {
                     <h2>{context.userName}</h2>
                     <PlusOutlined onClick={showModal} style={{ color: "#927BCA", fontSize: "1.5rem", }} />
                         <Modal id="modal" style={{ backgroundColor: "#363636" }}title="New Room" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                            <input type="text" onChange={(e) => context.handleRoomInput(e)}placeholder="Room Name"></input>
+                            <input type="text" onChange={(e) => context.handleRoomInput(e)} placeholder="Room Name"></input>
+                            <input type="password" onChange={(e) => context.handlePasswordInput(e)} placeholder="Password"></input>
                         </Modal>
+
+                        <Modal 
+                            id="modal" 
+                            style={{ backgroundColor: "#363636" }} 
+                            title={context.currentRoom} 
+                            visible={context.visible} 
+                            onOk={context.joinRoomServer} 
+                            onCancel={() => context.setVisible(false)}
+                        >
+                        <input 
+                            type="password" 
+                            onChange={(e) => context.joinRoomPasswordInput(e)} 
+                            placeholder="Password">
+                        </input>
+                      </Modal>
+          
                 </div>
                 <div className="header-right">
                     <span style={{ fontSize: "1.5rem", fontWeight: 500}}>{context.currentRoom}</span>

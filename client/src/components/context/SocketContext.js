@@ -12,9 +12,13 @@ function SocketConnection(props) {
     const [yourID, setYourID] = useState("");
     const [message, setMessage] = useState("");
     const [userName, setUserName] = useState("");
-    const [room, setRoom] = useState("")
-    const [rooms, setRooms] = useState([])
-    const [currentRoom, setCurrentRoom] = useState("")
+    const [room, setRoom] = useState("");
+    const [rooms, setRooms] = useState([]);
+    const [currentRoom, setCurrentRoom] = useState("");
+    const [password, setPassword] = useState("");
+    const [roomPassword, setRoomPassword] = useState("")
+    
+    const [visible, setVisible] = useState(false);
     
     // const [testRooms, setTestRooms] = useState([])
 
@@ -29,20 +33,23 @@ function SocketConnection(props) {
         setYourID(id);
       })
 
+    socketRef.current.on('passwordFeedback', (data) => {
+        console.log("passwordFeedback: ",data);
+    })
+
       socketRef.current.on("joined room", roomName => {
           setCurrentRoom(roomName);
+          console.log(roomName)
       })
 
       socketRef.current.on("updated-rooms-list", serverRooms => {
         setRooms(serverRooms)
         // setTestRooms([...testRooms, testRooms])
-
-        console.log(serverRooms)
       })
 
       socketRef.current.on("message", receivedMessage);
 
-      socketRef.current.on("join room", showRoom);
+      socketRef.current.on("join room", joinRoomServer);
         
     }, []);
 
@@ -85,7 +92,17 @@ function SocketConnection(props) {
     function saveUserName(e) {
         setUserName(e.target.value)
     }
+    
+    // create new room password input
+    function handlePasswordInput(e) {
+        setPassword(e.target.value)
+    }
 
+    function joinRoomServer(roomName) {
+        setVisible(false)
+        socketRef.current.emit('join room', { username: userName, room: roomName, password: password, joinRoomPassword: roomPassword });
+
+    }
 
     
     // function when loggin in
@@ -104,14 +121,26 @@ function SocketConnection(props) {
 
     // function that should make u join the room u press on the chat icon
     function showRoom(roomName) {
-        socketRef.current.emit("join room", roomName);
-        console.log(roomName)
+        setVisible(true);
+ 
+        // socketRef.current.emit('join room', { username: userName, room: roomName, password: password, joinRoomPassword: roomPassword });
+
+
+        // 1. klicka på rummet så öppnas modalen, setVisible(true)
+        // 2. spara lösen i modalen i ett state
+        // 3. på modal Ok anropa sockerRet emit rad 120. 
+        // 4. 
+
         // sets messages to 0 when changing room
         setMessages([])
     }
+    
+    // join room password input
+    function joinRoomPasswordInput(e) {
+        setRoomPassword(e.target.value)
+    }
 
-
-
+ 
     return (
         <socketContext.Provider value= {{
             sendMessage: sendMessage,
@@ -129,6 +158,11 @@ function SocketConnection(props) {
             createNewRoom: createNewRoom,
             showRoom: showRoom,
             currentRoom: currentRoom,
+            handlePasswordInput: handlePasswordInput,
+            visible: visible,
+            joinRoomPasswordInput: joinRoomPasswordInput,
+            setVisible: setVisible,
+            joinRoomServer: joinRoomServer
 
         }}>
 
