@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { WechatOutlined, LockOutlined } from '@ant-design/icons';
+import { CommentOutlined, LockOutlined } from '@ant-design/icons';
 import { socketContext } from "./context/SocketContext"
 
 function Rooms(props) {
@@ -8,13 +8,13 @@ function Rooms(props) {
 
     return(
         <div className="rooms-item" onClick={() => context.showJoinRoom(props.roomName)}>
-            <WechatOutlined 
+            <CommentOutlined 
                 id={props.roomName} 
                 value={props.roomName}  
-                style={{fontSize: "1.5rem", color: "#927BCA",  margin: ".2rem"}}
+                style={{fontSize: "2rem", color: "#927BCA",  margin: ".2rem"}}
             />
             <div className="rooms-div">
-                <span style={{color: "#927BCA", marginBottom: ".3rem"}}>{props.roomName} </span>
+                <span style={{color: "#927BCA", fontSize: "1rem"}}>{props.roomName} </span>
             </div>
             <LockOutlined 
                 style={{fontSize: "1.5rem", color: " #927BCA", margin: ".2rem"}}

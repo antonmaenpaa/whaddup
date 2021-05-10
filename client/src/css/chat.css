@@ -29,6 +29,7 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #363636; 
   }
+    .rooms::-webkit-scrollbar { width: 0 !important }
 
 .header {
     display: flex;
@@ -103,10 +104,14 @@ span {
     overflow-x: hidden;
 }
 
+.rooms-item:hover {
+    background-color: #4d3f6f;
+}
+
 .rooms-item {
     display: flex;
     width: 100%;
-    height: 3rem;
+    height: 5rem;
     justify-content: space-between;
     align-items: center;
     padding: .5rem;
@@ -182,6 +187,7 @@ form {
     display: flex;
     align-items: center;
     width: 100%;
+    border-left: 2px solid #927BCA;
 }
 
 .name {

@@ -95,6 +95,7 @@ function Chat(props) {
                             type="text" 
                             value={context.message} 
                             onChange={context.inputMessage} 
+                            placeholder="What's on your mind?"
                         />
                         <SendOutlined 
                             onClick={context.sendMessage} 
