@@ -5,6 +5,7 @@ const server = http.createServer(app);
 const socket = require('socket.io');
 const io = socket(server)
 
+let allRooms = []
 
 io.on('connection', socket => {
     socket.emit('your id', socket.id);
@@ -15,48 +16,48 @@ io.on('connection', socket => {
         io.emit('updated-rooms-list', getRooms());
     })
 
-    // socket.on('message', body => {
-    //     socket.emit('message', body)
-    // })
-
-    socket.on("join room", roomName => {
-        // if(!socket.id) {
-        //     io.socketsLeave(roomName)
-        // }
+    socket.on("join room", data => {
         socket.removeAllListeners('message');
-        socket.join(roomName)
-        socket.emit('joined room', roomName)
-        // console.log(io.sockets.adapter.rooms)
-        socket.emit('updated-rooms-list', getRooms());
+        socket.leaveAll()
+       
+        // finds room to join
+        let roomToJoin = allRooms.find((r) => r.name === data.roomName);
+        if (!roomToJoin) {
+            roomToJoin = {
+                name: data.roomName,
+                password: data.password
+            }
+            allRooms.push(roomToJoin)
+        }
 
-        
-        socket.on('message', body => {
-            io.to(roomName).emit('message', body)
-        })
-
+        // join room when creating new room
+        if(roomToJoin.password === data.password) {
+            console.log("RÄTT LÖSEN")
+            socket.join(data.roomName)
+            socket.emit('joined room', data.roomName)
+            socket.on('message', body => {
+               io.to(data.roomName).emit('message', body)
+            })
+            io.emit('updated-rooms-list', getRooms());
+            // check passwords when joining another room but not creating it
+        } else if(roomToJoin.password === data.roomPassword) {
+            console.log("RÄTT LÖSEN")
+            socket.join(data.roomName)
+            socket.emit('joined room', data.roomName)
+            socket.on('message', body => {
+               io.to(data.roomName).emit('message', body)
+            })
+            io.emit('updated-rooms-list', getRooms());
+        } else {
+            socket.emit("password feedback", "wrong password")
+        }
     })
 })
 
-// socket.on('disconnect', () => {
-//     io.of('/test').emit('message', 'user disconnected '+ socket.id);
-//     if (rooms[rooms[socket.id]] && Object.keys(rooms[rooms[socket.id]]).length == 2) {
-//         delete rooms[rooms[socket.id]];
-//     } else {
-//         if (rooms[rooms[socket.id]] && rooms[rooms[socket.id]][socket.id]) {
-//             delete rooms[rooms[socket.id]][socket.id];
-//         }
-//     }
-//     delete rooms[socket.id];
-//     console.log('Disonnected', socket.id);
-//     console.log(rooms);
-// })
-
 function getRooms() {
-
     const sockets = io.sockets.adapter.rooms
     const socketLength = 19
     let rooms = []
-    
 
     for (const socket of sockets) {
         const actualRooms = socket.filter((key) => key === socket[0]);
@@ -65,11 +66,8 @@ function getRooms() {
           rooms.push(actualRooms[0]);
         }
     }
-
     return [...new Set(rooms)]
-
 }
-
 
 server.listen(5000, () => {
     console.log(`Server is running on port 5000`)

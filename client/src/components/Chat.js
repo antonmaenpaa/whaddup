@@ -14,17 +14,9 @@ function Chat(props) {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
 
-    function showModal() {
-      setIsModalVisible(true);
-    };
-  
     function handleOk() {
       setIsModalVisible(false);
       context.createNewRoom()
-    };
-  
-    function handleCancel() {
-      setIsModalVisible(false);
     };
 
     return(
@@ -32,9 +24,39 @@ function Chat(props) {
             <div className="header">
                 <div className="header-left">
                     <h2>{context.userName}</h2>
-                    <PlusOutlined onClick={showModal} style={{ color: "#927BCA", fontSize: "1.5rem", }} />
-                        <Modal id="modal" style={{ backgroundColor: "#363636" }}title="New Room" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                            <input type="text" maxLength="18" onChange={(e) => context.handleRoomInput(e)}placeholder="Room Name"></input>
+                    <PlusOutlined 
+                        onClick={() => setIsModalVisible(true)} 
+                        style={{ color: "#927BCA", fontSize: "1.5rem", }} />
+                        <Modal 
+                            id="modal" 
+                            title="New Room" 
+                            visible={isModalVisible} 
+                            onOk={handleOk} 
+                            onCancel={() => setIsModalVisible(false)}>
+                            <input 
+                                type="text" 
+                                maxLength="18" 
+                                onChange={(e) => context.handleRoomInput(e)} 
+                                placeholder="Room Name">
+                            </input>
+                            <input 
+                                type="password" 
+                                onChange={(e) => context.handlePasswordInput(e)} 
+                                placeholder="Password">
+                            </input>
+                        </Modal>
+                        <Modal 
+                            id="modal" 
+                            title="Enter Room Password" 
+                            visible={context.isJoinRoomModalVisible} 
+                            onOk={context.handleJoinRoomOk}
+                            onCancel={context.handleJoinRoomCancel}
+                            >
+                            <input 
+                                type="password" 
+                                onChange={(e) => context.handleJoinPasswordInput(e)} 
+                                placeholder="Password" 
+                            />
                         </Modal>
                 </div>
                 <div className="header-right">
@@ -43,31 +65,41 @@ function Chat(props) {
             </div>
             <div className="flex-div">
                 <div className="rooms">
-
-                        {context.rooms.map((room, index) => (
-                    
-                            <Rooms key={index} roomName={room}/>
-                   
-                        ))}
-                        
+                    {context.rooms.map((room, index) => (
+                        <Rooms key={index} roomName={room}/>
+                    ))}
                 </div>
                 <div className="chat">
                     <ul id="ul" className="message-container">
-                     
                        {context.messages.map((message, index) => {
                            if (message.id === context.yourID) {
                                 return (
-                                    <MessageRight key={index} body={message.body} sender={message.sender} />
+                                    <MessageRight 
+                                        key={index} 
+                                        body={message.body} 
+                                        sender={message.sender} 
+                                    />
                                )
                            }
                                 return (
-                                    <MessageLeft key={index} body={message.body} sender={message.sender} />
+                                    <MessageLeft 
+                                        key={index} 
+                                        body={message.body} 
+                                        sender={message.sender} 
+                                    />
                            )
                        })}
                     </ul>
-                    <form>
-                        <input type="text" value={context.message} onChange={context.inputMessage} />
-                        <SendOutlined onClick={context.sendMessage} style={{ fontSize: "1.5rem", margin: 0, padding: 0, color: " #927BCA", marginRight: ".5rem"}}/>
+                    <form onSubmit={context.sendMessage}>
+                        <input 
+                            type="text" 
+                            value={context.message} 
+                            onChange={context.inputMessage} 
+                        />
+                        <SendOutlined 
+                            onClick={context.sendMessage} 
+                            style={{ fontSize: "1.5rem", margin: 0, padding: 0, color: " #927BCA", marginRight: ".5rem"}}
+                        />
                     </form>
                 </div>
             </div>

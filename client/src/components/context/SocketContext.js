@@ -4,21 +4,19 @@ import io from "socket.io-client";
 
 export const socketContext = createContext()
 
-// export let allRooms = ["General"];
-
 function SocketConnection(props) {
     const [messages, setMessages] = useState([]);
-    
     const [yourID, setYourID] = useState("");
     const [message, setMessage] = useState("");
     const [userName, setUserName] = useState("");
-    const [room, setRoom] = useState("")
-    const [rooms, setRooms] = useState([])
-    const [currentRoom, setCurrentRoom] = useState("")
-    
-    // const [testRooms, setTestRooms] = useState([])
-
-    const [isLoggedin, setIsLoggedin] = useState(false)
+    const [room, setRoom] = useState("");
+    const [rooms, setRooms] = useState([]);
+    const [currentRoom, setCurrentRoom] = useState("");
+    const [password, setPassword] = useState("");
+    const [roomPassword, setRoomPassword] = useState("");
+    const [isLoggedin, setIsLoggedin] = useState(false);
+    const [roomName, setRoomName] = useState("");
+    const [isJoinRoomModalVisible, setIsJoinRoomModalVisible] = useState(false);
 
     const socketRef = useRef();
 
@@ -29,50 +27,30 @@ function SocketConnection(props) {
         setYourID(id);
       })
 
-      socketRef.current.on("joined room", roomName => {
-          setCurrentRoom(roomName);
+      socketRef.current.on("joined room", room => {
+        setCurrentRoom(room);
       })
 
       socketRef.current.on("updated-rooms-list", serverRooms => {
         setRooms(serverRooms)
-        // setTestRooms([...testRooms, testRooms])
-        console.log(serverRooms)
       })
 
       socketRef.current.on("message", receivedMessage);
 
-      socketRef.current.on("join room", showRoom);
+      socketRef.current.on("password feedback", data => {
+          alert(data)
+      })
         
-    }, []);
+    },[]);
 
-    // function when pressing + icon
-    function createNewRoom() {
-        socketRef.current.emit("join room", room);
-        setRooms([...rooms, room])
-    }
 
     function receivedMessage(message) {
         setMessages(oldMsgs => [...oldMsgs, message]);
     }
 
-        // create room input from modal
+    // create room input from modal
     function handleRoomInput(e) {
         setRoom(e.target.value)
-    }
-
-        
-    // Takes value from input and sends data to socket
-    function sendMessage(e) {
-        e.preventDefault();
-        const messageObject = {
-            body: message,
-            id: yourID,
-            sender: userName,
-            currentRoom: currentRoom
-        };
-        setMessage("");;
-        socketRef.current.emit("message", messageObject);
-        
     }
 
     // send message input    
@@ -85,33 +63,73 @@ function SocketConnection(props) {
         setUserName(e.target.value)
     }
 
-
+    // password when creating new room
+    function handlePasswordInput(e) {
+        setPassword(e.target.value)
+    }
     
+    // password for join room modal
+    function handleJoinPasswordInput(e) {
+        setRoomPassword(e.target.value)
+    }
+
+    function handleJoinRoomOk() {
+        setIsJoinRoomModalVisible(false)
+        showRoom(roomName)
+    }
+
+    function showJoinRoom(roomName){
+        setIsJoinRoomModalVisible(true)
+        setRoomName(roomName)
+    }
+
+    function handleJoinRoomCancel() {
+        setIsJoinRoomModalVisible(false)
+    }
+
+        // function when pressing + icon
+    function createNewRoom() {
+        socketRef.current.emit('join room', { roomName: room, password, roomPassword })
+        setRooms([...rooms, room])
+        setMessages([])
+    }
+        
+    // Takes value from input and sends data to socket
+    function sendMessage(e) {
+        e.preventDefault();
+
+        const messageObject = {
+            body: message,
+            id: yourID,
+            sender: userName,
+            currentRoom: currentRoom
+        };
+        
+        setMessage("");
+        socketRef.current.emit("message", messageObject);
+    }
+
     // function when loggin in
     function enterChatRoom(e) {
         socketRef.current.emit("all rooms", rooms)
-        console.log('jeu')
         e.preventDefault()
             if(userName === ""){
                 return
             }
             setIsLoggedin(true)
-            
-            // console.log(isLoggedin)
-            // socketRef.current.emit("join room", rooms);
         }
 
     // function that should make u join the room u press on the chat icon
     function showRoom(roomName) {
-        socketRef.current.emit("join room", roomName);
-        console.log(roomName)
+        socketRef.current.emit("join room", {roomName, password, currentRoom, roomPassword});
+
         // sets messages to 0 when changing room
         setMessages([])
     }
 
-
-
     return (
+
+        // console.log(ifPassword),
         <socketContext.Provider value= {{
             sendMessage: sendMessage,
             receivedMessage: receivedMessage,
@@ -128,10 +146,14 @@ function SocketConnection(props) {
             createNewRoom: createNewRoom,
             showRoom: showRoom,
             currentRoom: currentRoom,
+            handlePasswordInput: handlePasswordInput,
+            handleJoinRoomOk: handleJoinRoomOk,
+            isJoinRoomModalVisible: isJoinRoomModalVisible,
+            handleJoinRoomCancel: handleJoinRoomCancel,
+            showJoinRoom: showJoinRoom,
+            handleJoinPasswordInput: handleJoinPasswordInput
 
         }}>
-
-
             {props.children}
                     
         </socketContext.Provider>
