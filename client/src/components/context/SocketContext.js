@@ -31,9 +31,7 @@ function SocketConnection(props) {
         setCurrentRoom(room);
       })
 
-      socketRef.current.on("updated-rooms-list", serverRooms => {
-        setRooms(serverRooms)
-      })
+      socketRef.current.on("updated-rooms-list", showAndUpdateAllRooms);
 
       socketRef.current.on("message", receivedMessage);
 
@@ -42,6 +40,10 @@ function SocketConnection(props) {
       })
         
     },[]);
+
+    function showAndUpdateAllRooms(rooms) {
+        setRooms(rooms)
+    };
 
 
     function receivedMessage(message) {
@@ -127,6 +129,7 @@ function SocketConnection(props) {
         setMessages([])
     }
 
+    console.log(rooms)
     return (
 
         // console.log(ifPassword),

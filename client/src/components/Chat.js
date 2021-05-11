@@ -66,7 +66,7 @@ function Chat(props) {
             <div className="flex-div">
                 <div className="rooms">
                     {context.rooms.map((room, index) => (
-                        <Rooms key={index} roomName={room}/>
+                        <Rooms key={index} roomName={room.name} password={room.checkedPassword}/>
                     ))}
                 </div>
                 <div className="chat">
