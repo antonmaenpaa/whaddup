@@ -53,6 +53,7 @@ function SocketConnection(props) {
     // create room input from modal
     function handleRoomInput(e) {
         setRoom(e.target.value)
+
     }
 
     // send message input    
@@ -78,6 +79,7 @@ function SocketConnection(props) {
     function handleJoinRoomOk() {
         setIsJoinRoomModalVisible(false)
         showRoom(roomName)
+        setRoomPassword("")
     }
 
     function showJoinRoom(roomName){
@@ -154,7 +156,12 @@ function SocketConnection(props) {
             isJoinRoomModalVisible: isJoinRoomModalVisible,
             handleJoinRoomCancel: handleJoinRoomCancel,
             showJoinRoom: showJoinRoom,
-            handleJoinPasswordInput: handleJoinPasswordInput
+            handleJoinPasswordInput: handleJoinPasswordInput,
+            room:room,
+            setRoom: setRoom,
+            password: password,
+            setPassword: setPassword,
+            roomPassword: roomPassword
 
         }}>
             {props.children}

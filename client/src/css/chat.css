@@ -9,11 +9,16 @@
     border: 2px solid #927BCA;
     border-radius: 2rem;
     overflow: hidden;
+  
 }
     /* width */
     ::-webkit-scrollbar {
     width: 7px;
   }
+
+ .border {
+     border: 2px solid #927BCA;
+ }
   
   /* Track */
   ::-webkit-scrollbar-track {
@@ -95,7 +100,7 @@ span {
 }
 .rooms {
     width: 40%;
-    border-top: 1px solid  #927BCA;;
+    border-top: 1px solid  #927BCA;
     display: flex;
     text-align: center;
     flex-direction: column;

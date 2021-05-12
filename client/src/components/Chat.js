@@ -13,10 +13,19 @@ function Chat(props) {
     const context = useContext(socketContext)
 
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [border, setBorder] = useState("");
 
     function handleOk() {
-      setIsModalVisible(false);
-      context.createNewRoom()
+        if(context.room === ""){
+            setBorder("border")
+            
+        } else {
+            setBorder("")
+            context.setRoom("")
+            context.setPassword("")
+            setIsModalVisible(false);
+            context.createNewRoom()
+        }
     };
 
     return(
@@ -27,7 +36,9 @@ function Chat(props) {
                     <PlusOutlined 
                         onClick={() => setIsModalVisible(true)} 
                         style={{ color: "#927BCA", fontSize: "1.5rem", }} />
-                        <Modal 
+                        <Modal      
+                            centered={true}
+                            okType="ghost"
                             id="modal" 
                             title="New Room" 
                             visible={isModalVisible} 
@@ -37,15 +48,23 @@ function Chat(props) {
                                 type="text" 
                                 maxLength="18" 
                                 onChange={(e) => context.handleRoomInput(e)} 
-                                placeholder="Room Name">
+                                placeholder="Room Name" required
+                                className={border}
+                                value={context.room}
+                                >
+                                
+                                    
                             </input>
                             <input 
                                 type="password" 
                                 onChange={(e) => context.handlePasswordInput(e)} 
-                                placeholder="Password">
+                                placeholder="Password not required"
+                                value={context.password}>
                             </input>
                         </Modal>
                         <Modal 
+                            centered={true}
+                            okType="ghost"
                             id="modal" 
                             title="Enter Room Password" 
                             visible={context.isJoinRoomModalVisible} 
@@ -55,7 +74,8 @@ function Chat(props) {
                             <input 
                                 type="password" 
                                 onChange={(e) => context.handleJoinPasswordInput(e)} 
-                                placeholder="Password" 
+                                placeholder="Password"
+                                value={context.roomPassword} 
                             />
                         </Modal>
                 </div>
