@@ -51,6 +51,7 @@ function SocketConnection(props) {
 
      
     },[]);
+    
 
 
     function userJoinedRoom(data) {
@@ -68,6 +69,7 @@ function SocketConnection(props) {
 
     function receivedMessage(text) {
         setMessages(oldMsgs => [...oldMsgs, text]);
+      
     }
 
     // create room input from modal
@@ -137,8 +139,10 @@ function SocketConnection(props) {
     function sendMessage(e) {
         e.preventDefault();
 
-        const ul = document.getElementById("ul")
-        ul.scrollTop = ul.scrollHeight
+        
+        // ul.scrollTop = ul.scrollHeight
+        let ul = document.getElementById("ul")
+        ul.scrollTo(0, ul.scrollHeight);
 
 
         const messageObject = {
