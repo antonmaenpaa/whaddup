@@ -9,17 +9,23 @@ let allRooms = []
 
 io.on('connection', socket => {
     socket.emit('your id', socket.id);
-    socket.emit('updated-rooms-list', getRooms(null));
+    socket.emit('updated-rooms-list', getRooms());
 
     socket.on('disconnect', (reason) => {
         console.log(`Disconnected: ${socket.id}, ${reason}`)
-        io.emit('updated-rooms-list', getRooms(null));
+        io.emit('updated-rooms-list', getRooms());
     })
 
+    socket.on("user-typing", (msg, roomName) => {
+        socket.broadcast.to(roomName).emit("user-typing", msg);
+    });
+
+
+
     socket.on("join room", data => {
-        console.log(data)
         socket.removeAllListeners('message');
-        socket.leaveAll()
+
+        socket.leaveAll()    
        
         // finds room to join
         let roomToJoin = allRooms.find((r) => r.name === data.roomName);
@@ -32,19 +38,20 @@ io.on('connection', socket => {
         }
 
         // join room when creating new room
-        if(roomToJoin.password === data.password) {
-            console.log("RÄTT LÖSEN")
+        if(roomToJoin.password === data.password) {     
             socket.join(data.roomName)
             socket.emit('joined room', data.roomName)
+            io.to(data.roomName).emit("user joined room", "New user joined room")
             socket.on('message', body => {
-               io.to(data.roomName).emit('message', body)
+               io.to(data.roomName).emit('message', body) 
             })
             io.emit('updated-rooms-list', getRooms());
+            
             // check passwords when joining another room but not creating it
         } else if(roomToJoin.password === data.roomPassword) {
-            console.log("RÄTT LÖSEN")
             socket.join(data.roomName)
             socket.emit('joined room', data.roomName)
+            io.to(data.roomName).emit("user joined room", "New user joined room")
             socket.on('message', body => {
                io.to(data.roomName).emit('message', body)
             })
@@ -67,6 +74,8 @@ function getRooms() {
                 let roomName = actualRooms[0];
                 const checkedPassword = ifPassword(roomName);
                 rooms.push({ name: roomName, checkedPassword: checkedPassword });
+            } else {
+                console.log("No Rooms")
             }
         }
     return rooms

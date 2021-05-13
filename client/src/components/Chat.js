@@ -11,6 +11,11 @@ import Rooms from './Rooms'
 
 function Chat(props) {
     const context = useContext(socketContext)
+    // const ref = createRef();
+
+    // useEffect(() => {
+    //     ref.current.scrollIntoView({ behaviour: "smooth", block: "start" });
+    //   }, [context.messages]);
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [border, setBorder] = useState("");
@@ -91,6 +96,12 @@ function Chat(props) {
                 </div>
                 <div className="chat">
                     <ul id="ul" className="message-container">
+                        {context.joinedRoom.map((join, index) => (
+                            <p key={index}>{join}</p>
+                        ))}
+                        {context.leftRoom.map((left, index) => (
+                            <p key={index}>{left}</p>
+                        ))}
                        {context.messages.map((message, index) => {
                            if (message.id === context.yourID) {
                                 return (
@@ -109,13 +120,15 @@ function Chat(props) {
                                     />
                            )
                        })}
+                       <p>{context.typingMsg}</p>
                     </ul>
                     <form onSubmit={context.sendMessage}>
                         <input 
                             type="text" 
-                            value={context.message} 
-                            onChange={context.inputMessage} 
+                            value={context.textMessage} 
+                            onChange={context.inputMessage}
                             placeholder="What's on your mind?"
+                         
                         />
                         <SendOutlined 
                             onClick={context.sendMessage} 

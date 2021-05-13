@@ -1,13 +1,13 @@
 import { createContext, useRef, useEffect, useState } from 'react'
 import io from "socket.io-client";
-
+import { message } from 'antd';
 
 export const socketContext = createContext()
 
 function SocketConnection(props) {
     const [messages, setMessages] = useState([]);
     const [yourID, setYourID] = useState("");
-    const [message, setMessage] = useState("");
+    const [textMessage, setMessage] = useState("");
     const [userName, setUserName] = useState("");
     const [room, setRoom] = useState("");
     const [rooms, setRooms] = useState([]);
@@ -17,6 +17,9 @@ function SocketConnection(props) {
     const [isLoggedin, setIsLoggedin] = useState(false);
     const [roomName, setRoomName] = useState("");
     const [isJoinRoomModalVisible, setIsJoinRoomModalVisible] = useState(false);
+    const [joinedRoom, setJoinedRoom] = useState([])
+    const [leftRoom, setLeftRoom] = useState([])
+    const [typingMsg, setIsTypingMsg] = useState("")
 
     const socketRef = useRef();
 
@@ -36,18 +39,35 @@ function SocketConnection(props) {
       socketRef.current.on("message", receivedMessage);
 
       socketRef.current.on("password feedback", data => {
-          alert(data)
+          message.error(data);
       })
-        
+
+      socketRef.current.on("user joined room", userJoinedRoom)
+      socketRef.current.on("user left room", userLeftRoom)
+      socketRef.current.on("user-typing", (msg) => {
+          setIsTypingMsg(msg)
+      })
+
+
+     
     },[]);
 
+
+    function userJoinedRoom(data) {
+        setJoinedRoom(oldUser => [...oldUser,data])
+    }
+
+    function userLeftRoom(data) {
+        setLeftRoom(oldUserleft => [...oldUserleft,data])
+    }
+
     function showAndUpdateAllRooms(rooms) {
-        setRooms(rooms)
+        setRooms(rooms) 
     };
 
 
-    function receivedMessage(message) {
-        setMessages(oldMsgs => [...oldMsgs, message]);
+    function receivedMessage(text) {
+        setMessages(oldMsgs => [...oldMsgs, text]);
     }
 
     // create room input from modal
@@ -56,10 +76,23 @@ function SocketConnection(props) {
 
     }
 
-    // send message input    
+    const emitTyping = (typing) => {
+        const textMessage = userName + " is typing..";
+        if (typing) socketRef.current.emit("user-typing", textMessage, currentRoom);
+        else socketRef.current.emit("user-typing", "", currentRoom);
+    };
+    
+    // send textMessage input    
     function inputMessage(e) {
         setMessage(e.target.value)
+        if (e.target.value.length > 0) {
+            emitTyping(true);
+          } else {
+            emitTyping(false);
+          }
+      
     }
+
 
     // login input
     function saveUserName(e) {
@@ -95,20 +128,26 @@ function SocketConnection(props) {
     function createNewRoom() {
         socketRef.current.emit('join room', { roomName: room, password, roomPassword })
         setRooms([...rooms, room])
+        setJoinedRoom([])
         setMessages([])
+        setLeftRoom([])
     }
         
     // Takes value from input and sends data to socket
     function sendMessage(e) {
         e.preventDefault();
 
+        const ul = document.getElementById("ul")
+        ul.scrollTop = ul.scrollHeight
+
+
         const messageObject = {
-            body: message,
+            body: textMessage,
             id: yourID,
             sender: userName,
             currentRoom: currentRoom
         };
-        
+        emitTyping(false)
         setMessage("");
         socketRef.current.emit("message", messageObject);
     }
@@ -126,42 +165,43 @@ function SocketConnection(props) {
     // function that should make u join the room u press on the chat icon
     function showRoom(roomName) {
         socketRef.current.emit("join room", {roomName, password, currentRoom, roomPassword});
-
-        // sets messages to 0 when changing room
+        setJoinedRoom([])
         setMessages([])
+        setLeftRoom([])
     }
-
-    console.log(rooms)
+    
     return (
-
-        // console.log(ifPassword),
         <socketContext.Provider value= {{
+            messages: messages,
+            yourID: yourID,
+            textMessage: textMessage,
+            userName: userName,
+            room:room,
+            rooms: rooms,
+            currentRoom: currentRoom,
+            password: password,
+            roomPassword: roomPassword,
+            isLoggedin: isLoggedin,
+            isJoinRoomModalVisible: isJoinRoomModalVisible,
+            joinedRoom: joinedRoom,
+            leftRoom: leftRoom,
+            typingMsg: typingMsg,
             sendMessage: sendMessage,
             receivedMessage: receivedMessage,
             inputMessage: inputMessage,
             saveUserName: saveUserName,
             enterChatRoom: enterChatRoom,
-            messages: messages,
-            yourID: yourID,
-            message: message,
-            userName: userName,
-            isLoggedin: isLoggedin,
-            rooms: rooms,
             handleRoomInput: handleRoomInput,
             createNewRoom: createNewRoom,
             showRoom: showRoom,
-            currentRoom: currentRoom,
             handlePasswordInput: handlePasswordInput,
             handleJoinRoomOk: handleJoinRoomOk,
-            isJoinRoomModalVisible: isJoinRoomModalVisible,
             handleJoinRoomCancel: handleJoinRoomCancel,
             showJoinRoom: showJoinRoom,
             handleJoinPasswordInput: handleJoinPasswordInput,
-            room:room,
             setRoom: setRoom,
-            password: password,
             setPassword: setPassword,
-            roomPassword: roomPassword
+            emitTyping: emitTyping
 
         }}>
             {props.children}
