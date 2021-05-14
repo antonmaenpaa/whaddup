@@ -8,14 +8,8 @@ import MessageRight from './MessageRight'
 import Rooms from './Rooms'
 
 
-
-function Chat(props) {
+function Chat() {
     const context = useContext(socketContext)
-    // const ref = createRef();
-
-    // useEffect(() => {
-    //     ref.current.scrollIntoView({ behaviour: "smooth", block: "start" });
-    //   }, [context.messages]);
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [border, setBorder] = useState("");
@@ -56,16 +50,15 @@ function Chat(props) {
                                 placeholder="Room Name" required
                                 className={border}
                                 value={context.room}
-                                >
-                                
-                                    
-                            </input>
+                            />      
+                            
                             <input 
                                 type="password" 
                                 onChange={(e) => context.handlePasswordInput(e)} 
                                 placeholder="Password not required"
-                                value={context.password}>
-                            </input>
+                                value={context.password}
+                            />
+                            
                         </Modal>
                         <Modal 
                             centered={true}
@@ -96,32 +89,32 @@ function Chat(props) {
                 </div>
                 <div className="chat">
                     <ul id="ul" className="message-container">
-                        {context.joinedRoom.map((join, index) => (
-                            <p key={index}>{join}</p>
-                        ))}
                         {context.leftRoom.map((left, index) => (
                             <p key={index}>{left}</p>
-                        ))}
+                            ))}
                        {context.messages.map((message, index) => {
                            if (message.id === context.yourID) {
-                                return (
-                                    <MessageRight 
-                                        key={index} 
-                                        body={message.body} 
-                                        sender={message.sender} 
-                                    />
-                               )
-                           }
+                               return (
+                                   <MessageRight 
+                                   key={index} 
+                                   body={message.body} 
+                                   sender={message.sender} 
+                                   />
+                                   )
+                                }
                                 return (
                                     <MessageLeft 
-                                        key={index} 
-                                        body={message.body} 
-                                        sender={message.sender} 
+                                    key={index} 
+                                    body={message.body} 
+                                    sender={message.sender} 
                                     />
-                           )
-                       })}
-                       <p>{context.typingMsg}</p>
+                                    )
+                                })}
+                                {context.joinedRoom.map((join, index) => (
+                                    <p className="join" key={index}>{join}</p>
+                                ))}
                     </ul>
+                       <p className="typing">{context.typingMsg}</p>
                     <form onSubmit={context.sendMessage}>
                         <input 
                             type="text" 

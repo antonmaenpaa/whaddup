@@ -1,12 +1,10 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useRef, useEffect, useState } from 'react'
 import io from "socket.io-client";
 import { message } from 'antd';
 
 export const socketContext = createContext()
 
 function SocketConnection(props) {
-    const ENDPOINT = 'http://127.0.0.1:5000/';
-    const [socket] = useState(io(ENDPOINT, { transports: ['websocket', 'polling'] }));
     const [messages, setMessages] = useState([]);
     const [yourID, setYourID] = useState("");
     const [textMessage, setMessage] = useState("");
@@ -23,38 +21,36 @@ function SocketConnection(props) {
     const [leftRoom, setLeftRoom] = useState([])
     const [typingMsg, setIsTypingMsg] = useState("")
 
-    // const socket = useRef();
+    const socketRef = useRef();
 
     useEffect(() => {
-      socket.on("connect", () => {
-          console.log('conneceted')
-      });
+      socketRef.current = io.connect('/');
       // sets connected clients id to state
-      socket.on("your id", id => {
+      socketRef.current.on("your id", id => {
         setYourID(id);
       })
 
-      socket.on("joined room", room => {
+      socketRef.current.on("joined room", room => {
         setCurrentRoom(room);
       })
 
-      socket.on("updated-rooms-list", showAndUpdateAllRooms);
+      socketRef.current.on("updated-rooms-list", showAndUpdateAllRooms);
 
-      socket.on("message", receivedMessage);
+      socketRef.current.on("message", receivedMessage);
 
-      socket.on("password feedback", data => {
+      socketRef.current.on("password feedback", data => {
           message.error(data);
       })
 
-      socket.on("user joined room", userJoinedRoom)
-      socket.on("user left room", userLeftRoom)
-      socket.on("user-typing", (msg) => {
+      socketRef.current.on("user joined room", userJoinedRoom)
+      socketRef.current.on("user left room", userLeftRoom)
+      socketRef.current.on("user-typing", (msg) => {
           setIsTypingMsg(msg)
       })
 
 
      
-    },[socket]);
+    },[]);
     
 
 
@@ -84,8 +80,8 @@ function SocketConnection(props) {
 
     const emitTyping = (typing) => {
         const textMessage = userName + " is typing..";
-        if (typing) socket.emit("user-typing", textMessage, currentRoom);
-        else socket.emit("user-typing", "", currentRoom);
+        if (typing) socketRef.current.emit("user-typing", textMessage, currentRoom);
+        else socketRef.current.emit("user-typing", "", currentRoom);
     };
     
     // send textMessage input    
@@ -132,7 +128,7 @@ function SocketConnection(props) {
 
         // function when pressing + icon
     function createNewRoom() {
-        socket.emit('join room', { roomName: room, password, roomPassword })
+        socketRef.current.emit('join room', { roomName: room, password, roomPassword })
         setRooms([...rooms, room])
         setJoinedRoom([])
         setMessages([])
@@ -157,12 +153,12 @@ function SocketConnection(props) {
         };
         emitTyping(false)
         setMessage("");
-        socket.emit("message", messageObject);
+        socketRef.current.emit("message", messageObject);
     }
 
     // function when loggin in
     function enterChatRoom(e) {
-        socket.emit("all rooms", rooms)
+        socketRef.current.emit("all rooms", rooms)
         e.preventDefault()
             if(userName === ""){
                 return
@@ -172,7 +168,7 @@ function SocketConnection(props) {
 
     // function that should make u join the room u press on the chat icon
     function showRoom(roomName) {
-        socket.emit("join room", {roomName, password, currentRoom, roomPassword});
+        socketRef.current.emit("join room", {roomName, password, currentRoom, roomPassword});
         setJoinedRoom([])
         setMessages([])
         setLeftRoom([])

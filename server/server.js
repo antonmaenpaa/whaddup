@@ -78,7 +78,7 @@ function getRooms() {
                 const checkedPassword = ifPassword(roomName);
                 rooms.push({ name: roomName, checkedPassword: checkedPassword });
             } else {
-                console.log("No Rooms")
+                rooms.push()
             }
         }
     return rooms
